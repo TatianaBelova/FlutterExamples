@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_note/clockStandart.dart';
 import 'package:my_flutter_note/inheritedWidget.dart';
+import 'package:my_flutter_note/myMixinWidget.dart';
 import 'package:my_flutter_note/simpleWidgets.dart';
 import 'dart:async';
 import 'dart:math';

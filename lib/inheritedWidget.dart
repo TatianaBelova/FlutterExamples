@@ -10,8 +10,8 @@ class MyInheritedWidget extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(MyInheritedWidget old) {
-    return accountId != old.accountId;
+  bool updateShouldNotify(MyInheritedWidget oldWidget) {
+    return accountId != oldWidget.accountId;
   }
 }
 
