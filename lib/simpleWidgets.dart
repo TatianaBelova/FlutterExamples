@@ -1,14 +1,18 @@
+import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:my_flutter_note/res/colors.dart';
 import 'package:my_flutter_note/res/strings.dart';
+import 'dart:math';
 
 class SimpleWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _row();
+    return _threeList();
   }
 
   ListView _listViewBuilder() {
@@ -97,6 +101,52 @@ class SimpleWidgets extends StatelessWidget {
         Icon(Icons.ac_unit)
       ],
     );
+  }
+
+  Widget _threeList() {
+    final random = Random();
+
+    return ListView(children: [
+      GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(20),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 4,
+        children: List.generate(
+            random.nextInt(15) + 1,
+            (_) => Container(
+                  color: Colors.teal[100],
+                )),
+      ),
+      GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(20),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 4,
+        children: List.generate(
+            random.nextInt(15) + 1,
+            (_) => Container(
+                  color: Colors.yellow[100],
+                )),
+      ),
+      GridView.count(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(20),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        crossAxisCount: 4,
+        children: List.generate(
+            random.nextInt(15) + 1,
+            (_) => Container(
+                  color: Colors.red[100],
+                )),
+      )
+    ]);
   }
 }
 
@@ -216,3 +266,22 @@ class ToyotaCar {
 //  }
 //}
 
+
+//проверить этот пример!
+Future<String> printDailyNews() async {
+  File file = File('dailyNewsDigest.txt');
+  String content = await file.readAsString();
+  return content;
+}
+
+Widget newsWidget() {
+  return FutureBuilder(
+    builder: (context, snapshot) {
+      if (snapshot.hasData == null) {
+        return Container();
+      }
+      return Text(snapshot.data);
+    },
+    future: printDailyNews(),
+  );
+}
