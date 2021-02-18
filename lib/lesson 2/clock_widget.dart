@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,6 @@ class ClockWidget extends StatefulWidget {
 }
 
 class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
-
   DateTime date;
 
   @override
@@ -70,10 +68,7 @@ class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          _minute(date),
-          _second(date)
-        ],
+        children: [_minute(date), _second(date)],
       ),
     );
   }
@@ -91,11 +86,11 @@ class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
         ),
         child: Center(
             child: Text(
-              date.minute < 10
-                  ? '0${date.minute.toString()}'
-                  : date.minute.toString(),
-              style: TextStyle(color: Colors.white, fontSize: 50),
-            )),
+          date.minute < 10
+              ? '0${date.minute.toString()}'
+              : date.minute.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 50),
+        )),
       ),
     );
   }
@@ -113,83 +108,12 @@ class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
         height: 100,
         child: Center(
             child: Text(
-              date.second < 10
-                  ? '0${date.second.toString()}'
-                  : date.second.toString(),
-              style: TextStyle(color: Colors.white, fontSize: 50),
-            )),
+          date.second < 10
+              ? '0${date.second.toString()}'
+              : date.second.toString(),
+          style: TextStyle(color: Colors.white, fontSize: 50),
+        )),
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//    animationController = new AnimationController(
-//      duration: const Duration(milliseconds: 500),
-//      vsync: this,
-//    )..repeat();
-
-//    rotateX = new Tween<double>(
-//      begin: .0,
-//      end: 1.0,
-//    ).animate(new CurvedAnimation(
-//      parent: animationController,
-//      curve: new Interval(.0, 0.5),
-//    ));
-//    rotateY = new Tween<double>(
-//      begin: .0,
-//      end: 1.0,
-//    ).animate(new CurvedAnimation(
-//      parent: animationController,
-//      curve: new Interval(1 / 3, 2 / 3),
-//    ));
-//    rotateZ = new Tween<double>(
-//      begin: .0,
-//      end: 1.0,
-//    ).animate(new CurvedAnimation(
-//      parent: animationController,
-//      curve: new Interval(.0, 1.0),
-//    ));
-
-
-//          AnimatedBuilder(
-//            animation: animationController,
-//            child: Transform.translate(
-//              offset: const Offset(2.0, 0.0),
-//              child: Container(
-//                decoration: BoxDecoration(
-//                  color: MyColors.lightBrown,
-//                  border: Border.all(color: MyColors.lightBrown, width: 10.0),
-//                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                ),
-//                width: 100,
-//                height: 100,
-//                child: Center(
-//                    child: Text(
-//                  date.second < 10
-//                      ? '0${date.second.toString()}'
-//                      : date.second.toString(),
-//                  style: TextStyle(color: Colors.white, fontSize: 50),
-//                )),
-//              ),
-//            ),
-//            builder: (BuildContext context, Widget _widget) {
-//              return Transform(
-//                transform: new Matrix4.rotationX(rotateX.value * math.pi)
-//                  ..multiply(new Matrix4.rotationY(rotateY.value * math.pi))
-//                  ..multiply(new Matrix4.rotationZ(rotateZ.value * math.pi)),
-//                alignment: Alignment.center,
-//                child: _widget,
-//              );
-//            },
-//          ),

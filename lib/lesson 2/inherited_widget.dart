@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MyInheritedWidget extends InheritedWidget {
-  final int accountId;
+  int accountId;
 
-  const MyInheritedWidget(this.accountId, Widget child) : super(child: child);
+  MyInheritedWidget(this.accountId, Widget child) : super(child: child);
 
   static MyInheritedWidget of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<MyInheritedWidget>();
@@ -15,29 +15,31 @@ class MyInheritedWidget extends InheritedWidget {
   }
 }
 
+
 class MyInheritedPage extends StatelessWidget {
-  final int accountId;
+  int accountId;
 
   MyInheritedPage(this.accountId);
 
   Widget build(BuildContext context) {
     return MyInheritedWidget(
       accountId,
-      const MyWidget(),
+      MyWidget(),
     );
   }
 }
 
+
 class MyWidget extends StatelessWidget {
-  const MyWidget();
+  MyWidget();
 
   Widget build(BuildContext context) {
-    return const MyOtherWidget();
+    return MyOtherWidget();
   }
 }
 
 class MyOtherWidget extends StatelessWidget {
-  const MyOtherWidget();
+  MyOtherWidget();
 
   @override
   Widget build(BuildContext context) {
