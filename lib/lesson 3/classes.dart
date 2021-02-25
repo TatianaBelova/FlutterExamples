@@ -30,25 +30,25 @@ class Toyota extends Cars {
 }
 
 class ToyotaCar {
-  String color;
-  int vinCode;
+  String _color;
+  int _vinCode;
 
   String get carColor {
-    return color;
+    return _color;
   }
 
   set carColor(String color) {
-    this.color = color;
+    this._color != null ? color : 'default black color';
   }
 
   ToyotaCar.corollaOnly() {
-    color = 'Black';
-    vinCode = 784643;
+    this._color = 'Black';
+    this._vinCode = 784643;
   }
 
   ToyotaCar.forAuris(String c, int v) {
-    color = c;
-    vinCode = v;
+    _color = c;
+    _vinCode = v;
   }
 
   var frenchCars = ['Renault', 'Citroen'];
@@ -57,19 +57,9 @@ class ToyotaCar {
       Text('Hello, $userName + ${userEmail == null ? '' : userEmail}');
 
   void display() {
-    print('Color: $color VIN_CODE: $vinCode');
+    print('Color: $_color VIN_CODE: $_vinCode');
     greeting('Name', 'Email');
   }
 
   String playerName(String name) => name ?? 'Guest';
 }
-
-//
-//extension FormatDate on String {
-//  String formatDate() {
-//    DateFormat rawDateFormat = DateFormat('yyyy-MM-dd');
-//    DateFormat newDateFormat = DateFormat('dd.MM.yyyy');
-//    DateTime rawDateTime = rawDateFormat.parse(this);
-//    return newDateFormat.format(rawDateTime);
-//  }
-//}
