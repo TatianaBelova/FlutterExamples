@@ -42,17 +42,17 @@ class CoinDetailPage extends StatelessWidget {
         ));
   }
 
-  Future<List<CoinEvent>> _loadCoinEvents() async =>
+  Future<List<CoinEventModel>> _loadCoinEvents() async =>
       await GettingCoinEventsInteractor().execute(coinId: coin.id);
 
-  Widget _listEvents(List<CoinEvent> events) => ListView.builder(
+  Widget _listEvents(List<CoinEventModel> events) => ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: events.length,
         itemBuilder: (context, index) => _eventWidget(events[index]),
       );
 
-  Widget _eventWidget(CoinEvent event) => Builder(
+  Widget _eventWidget(CoinEventModel event) => Builder(
         builder: (context) => Container(
           height: 200,
           padding: const EdgeInsets.all(16.0),

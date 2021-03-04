@@ -1,4 +1,4 @@
-class CoinEvent {
+class CoinEventModel {
   String id;
   String date;
   String dateTo;
@@ -8,7 +8,7 @@ class CoinEvent {
   String link;
   String proofImageLink;
 
-  CoinEvent(
+  CoinEventModel(
       {this.id,
         this.date,
         this.dateTo,
@@ -18,7 +18,7 @@ class CoinEvent {
         this.link,
         this.proofImageLink});
 
-  CoinEvent.fromJson(Map<String, dynamic> json) {
+  CoinEventModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     date = json['date'];
     dateTo = json['date_to'];

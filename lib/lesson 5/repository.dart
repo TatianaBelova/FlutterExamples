@@ -7,6 +7,6 @@ class Repository {
   Future<List<Coin>> loadListCoins() async =>
       await GettingCoinListInteractor().execute();
 
-  Future<List<CoinEvent>> loadCoinEvents(String id) async =>
+  Future<List<CoinEventModel>> loadCoinEvents(String id) async =>
       await GettingCoinEventsInteractor().execute(coinId: id);
 }

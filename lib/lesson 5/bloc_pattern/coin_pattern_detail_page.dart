@@ -97,7 +97,7 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
                 )
           : LoadingPage());
 
-  Widget _eventWidget(CoinEvent event) => Builder(
+  Widget _eventWidget(CoinEventModel event) => Builder(
         builder: (context) => Container(
           height: 200,
           padding: const EdgeInsets.all(16.0),

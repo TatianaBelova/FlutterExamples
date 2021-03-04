@@ -6,7 +6,7 @@ import 'package:my_flutter_note/lesson%205/repository.dart';
 import '../no_internet_page.dart';
 
 class CoinPatternDetailBloc {
-  List<CoinEvent> _listEvents;
+  List<CoinEventModel> _listEvents;
   Repository _repository;
   String coinId;
 
