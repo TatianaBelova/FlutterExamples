@@ -30,28 +30,62 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder(
-          stream: _bloc.internetState,
-          initialData: InternetState.connected,
-          builder: (context, snapshot) {
-            InternetState state = snapshot.data;
-            switch (state) {
-              case InternetState.connected:
-                {
-                  _bloc.getCoins();
-                  return _coinsWidget();
-                }
-              case InternetState.notConnected:
-                {
-                  return NoInternetPage(
-                      haveInternetAction: () => _bloc.haveInternet.add(null));
-                }
-            }
-            return Container();
-          },
-        ));
+    return ValueListenableBuilder(
+        valueListenable: _bloc.startLoadingNotifier,
+        builder: (_, value, __) => AnimatedSwitcher(
+              duration: Duration(milliseconds: 2000),
+              child: value ? _page() : _startLoad(),
+              transitionBuilder: (Widget child, Animation<double> animation) =>
+                  ScaleTransition(
+                scale: animation,
+                alignment: Alignment.topCenter,
+                child: child,
+              ),
+            ));
+  }
+
+  Widget _page() => SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: StreamBuilder(
+        stream: _bloc.internetState,
+        initialData: InternetState.connected,
+        builder: (context, snapshot) {
+          InternetState state = snapshot.data;
+          switch (state) {
+            case InternetState.connected:
+              {
+                _bloc.getCoins();
+                return _coinsWidget();
+              }
+            case InternetState.notConnected:
+              {
+                return NoInternetPage(
+                    haveInternetAction: () => _bloc.haveInternet.add(null));
+              }
+          }
+          return Container();
+        },
+      ));
+
+  Widget _startLoad() {
+    final tween = SizeTween(begin: Size.zero, end: Size(300, 300));
+    return Center(
+      child: GestureDetector(
+        onTap: _bloc.tapOnStartLoading,
+        child: TweenAnimationBuilder(
+          child: Center(
+              child: Text('Начать загрузку данных?',
+                  style: TextStyle(fontSize: 18))),
+          duration: Duration(seconds: 5),
+          curve: Curves.easeInCirc,
+          builder: (_, Size size, Widget child) => SizedBox.fromSize(
+            child: child,
+            size: size,
+          ),
+          tween: tween,
+        ),
+      ),
+    );
   }
 
   Widget _coinsWidget() => StreamBuilder(
@@ -60,11 +94,15 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return ColoredBox(
-                    color: index % 2 == 0
-                        ? Color.fromARGB(255, 175, 246, 250)
-                        : Colors.transparent,
-                    child: _singleCoin(snapshot.data[index]));
+                return ValueListenableBuilder(
+                  valueListenable: _bloc.colorNotifier,
+                  child: _singleCoin(snapshot.data[index]),
+                  builder: (_, value, Widget child) => AnimatedContainer(
+                    duration: Duration(seconds: 2),
+                    color: index % 2 == 0 ? value : Colors.transparent,
+                    child: child,
+                  ),
+                );
               },
               itemCount: 30,
               shrinkWrap: true)

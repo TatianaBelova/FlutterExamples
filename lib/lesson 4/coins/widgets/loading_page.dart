@@ -4,7 +4,7 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height - kToolbarHeight - kBottomNavigationBarHeight,
       child: Center(
         child: CircularProgressIndicator(
           backgroundColor: Colors.greenAccent,

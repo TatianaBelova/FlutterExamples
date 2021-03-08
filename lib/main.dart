@@ -19,16 +19,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text('Flutter examples'),
         ),
         body: SafeArea(child:
             CoinsPatternPage()
-        // BlocProvider(
-        //     create: (context) => CoinBloc(),
-        //     child: CoinsBlocLibraryPage()),
         ),
       ),
     );
   }
 }
+
+// BlocProvider(
+//     create: (context) => CoinBloc(),
+//     child: CoinsBlocLibraryPage()),
