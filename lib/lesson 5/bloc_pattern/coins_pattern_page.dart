@@ -31,41 +31,43 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: _bloc.startLoadingNotifier,
-        builder: (_, value, __) => AnimatedSwitcher(
-              duration: Duration(milliseconds: 2000),
-              child: value ? _page() : _startLoad(),
-              transitionBuilder: (Widget child, Animation<double> animation) =>
-                  ScaleTransition(
-                scale: animation,
-                alignment: Alignment.topCenter,
-                child: child,
-              ),
-            ));
+      valueListenable: _bloc.startLoadingNotifier,
+      builder: (_, value, __) => AnimatedSwitcher(
+        duration: Duration(milliseconds: 2000),
+        child: value ? _page() : _startLoad(),
+        transitionBuilder: (Widget child, Animation<double> animation) =>
+            ScaleTransition(
+          scale: animation,
+          alignment: Alignment.topCenter,
+          child: child,
+        ),
+      ),
+    );
   }
 
   Widget _page() => SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: StreamBuilder(
-        stream: _bloc.internetState,
-        initialData: InternetState.connected,
-        builder: (context, snapshot) {
-          InternetState state = snapshot.data;
-          switch (state) {
-            case InternetState.connected:
-              {
-                _bloc.getCoins();
-                return _coinsWidget();
-              }
-            case InternetState.notConnected:
-              {
-                return NoInternetPage(
-                    haveInternetAction: () => _bloc.haveInternet.add(null));
-              }
-          }
-          return Container();
-        },
-      ));
+        padding: const EdgeInsets.all(16.0),
+        child: StreamBuilder(
+          stream: _bloc.internetState,
+          initialData: InternetState.connected,
+          builder: (context, snapshot) {
+            InternetState state = snapshot.data;
+            switch (state) {
+              case InternetState.connected:
+                {
+                  _bloc.getCoins();
+                  return _coinsWidget();
+                }
+              case InternetState.notConnected:
+                {
+                  return NoInternetPage(
+                      haveInternetAction: () => _bloc.haveInternet.add(null));
+                }
+            }
+            return Container();
+          },
+        ),
+      );
 
   Widget _startLoad() {
     final tween = SizeTween(begin: Size.zero, end: Size(300, 300));
@@ -115,13 +117,19 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
           coin.symbol,
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
         ),
-        title: Text(
-          coin.name,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.0,
-              color: Colors.blueGrey),
+        title: Hero(
+          tag: '${coin.name}',
+          child: Material(
+            color: Colors.transparent,
+            child: Text(
+              coin.name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                  color: Colors.blueGrey),
+            ),
+          ),
         ),
         subtitle: Text('id: ${coin.id}', textAlign: TextAlign.center),
       );

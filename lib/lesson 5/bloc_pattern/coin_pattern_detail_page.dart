@@ -34,7 +34,15 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.coin.name),
+          title: Hero(
+              tag: '${widget.coin.name}',
+              child: Material(
+                  color: Colors.transparent,
+                  child: Text(widget.coin.name,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)))),
           leading: GestureDetector(
               onTap: () => _bloc.tapOnBackButton.add(null),
               child: Icon(Icons.arrow_back, color: Colors.blueGrey)),
