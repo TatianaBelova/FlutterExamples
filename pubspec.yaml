@@ -32,6 +32,10 @@ dependencies:
   flutter_bloc: 6.1.2
   equatable: 1.2.5 #помогает реализовать равенство на основе значений без необходимости явно переопределять == и hashCode
   connectivity: 2.0.2 #слушает измения сетевого статуса
+#  yandex_mapkit: #форкнутая библиотека
+#    git:
+#      url: https://github.com/TatianaBelova/yandex_mapkit
+#      ref: master
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_flutter_note/lesson%206/flutter_logo_animated.dart';
 import 'package:my_flutter_note/lesson%206/switcher.dart';
 
@@ -35,19 +36,42 @@ class NoInternetPageState extends State<NoInternetPage> {
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _textNoInternet(),
             _rowUpdate(),
-            ValueListenableBuilder(
-              valueListenable: _bloc.switchNotifier,
-              builder: (_, value, __) => Switcher(
-                selected: value,
-                onTap: (bool newValue) {
-                  _bloc.switchNotifier.value = newValue;
-                },
-              ),
+            SizedBox(height: 100),
+            Row(
+              children: [
+                Text('Включить Bluetooth '),
+                SizedBox(width: 15),
+                ValueListenableBuilder(
+                  valueListenable: _bloc.switchBluetoothNotifier,
+                  builder: (_, value, __) => Switcher(
+                    selected: value,
+                    onTap: (bool newValue) async {
+                      await _bloc.switchBluetooth();
+                    },
+                  ),
+                ),
+              ],
             ),
-            FlutterLogoAnimated()
+            Row(
+              children: [
+                Text('Включить Wifi'),
+                SizedBox(width: 15),
+                ValueListenableBuilder(
+                  valueListenable: _bloc.switchWifiNotifier,
+                  builder: (_, value, __) => Switcher(
+                    selected: value,
+                    onTap: (bool newValue) async {
+                      await _bloc.switchWifi();
+                    },
+                  ),
+                ),
+              ],
+            ),
+            // FlutterLogoAnimated()
           ],
         ),
       ),
@@ -63,13 +87,12 @@ class NoInternetPageState extends State<NoInternetPage> {
 
   Widget _rowUpdate() {
     return RaisedButton(
-      onPressed:  _bloc.onUpdateTap,
+      onPressed: _bloc.onUpdateTap,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _rowUpdateIcon(),
-          Text("Обновить страницу",
-              style: regularTextStyle),
+          Text("Обновить страницу", style: regularTextStyle),
         ],
       ),
     );
@@ -82,17 +105,19 @@ class NoInternetPageState extends State<NoInternetPage> {
           valueListenable: _bloc.updateIconNotifier,
           builder: (_, value, __) {
             return value
-                ? UpdateIconAnimated(onFinishAnimation:  _bloc.onFinishAnimation)
+                ? UpdateIconAnimated(onFinishAnimation: _bloc.onFinishAnimation)
                 : Icon(Icons.refresh, color: Colors.green.shade600);
           }),
     );
   }
 }
 
-
 class NoInternetPageBloc {
+  static const platform = const MethodChannel('flutterExamples/bluetooth');
+
   final ValueNotifier updateIconNotifier = ValueNotifier<bool>(false);
-  final ValueNotifier switchNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier switchBluetoothNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier switchWifiNotifier = ValueNotifier<bool>(false);
   final Function() hasInternet;
 
   NoInternetPageBloc({this.hasInternet});
@@ -115,5 +140,30 @@ class NoInternetPageBloc {
 
   onFinishAnimation() {
     updateIconNotifier.value = false;
+  }
+
+  Future<String> switchBluetooth() async {
+    try {
+      final String result = await platform.invokeMethod(!switchBluetoothNotifier.value ? 'onBluetooth' : 'offBluetooth');
+      switchBluetoothNotifier.value = !switchBluetoothNotifier.value;
+      print(result);
+      return result;
+    } on PlatformException catch (e) {
+      print('Ошибка платформы: ${e.message}');
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<void> switchWifi() async {
+    try {
+      await platform.invokeMethod('switchWifi');
+      switchWifiNotifier.value = !switchWifiNotifier.value;
+    } on PlatformException catch (e) {
+      print('Ошибка платформы: ${e.message}');
+    } catch (e) {
+      print(e);
+    }
   }
 }
