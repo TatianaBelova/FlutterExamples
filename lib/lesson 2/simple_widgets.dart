@@ -14,10 +14,10 @@ class SimpleWidgets extends StatelessWidget {
   _row() {
     return Row(
       children: <Widget>[
-        Icon(Icons.ac_unit, size: 60,),
-        Icon(Icons.ac_unit, size: 100,),
-        Icon(Icons.ac_unit, size: 40,),
-        Icon(Icons.ac_unit)
+        const Icon(Icons.ac_unit, size: 60,),
+        const Icon(Icons.ac_unit, size: 100,),
+        const Icon(Icons.ac_unit, size: 40,),
+        const Icon(Icons.ac_unit)
       ],
     );
   }
@@ -26,10 +26,10 @@ class SimpleWidgets extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(Icons.ac_unit, size: 60,),
-        Icon(Icons.ac_unit, size: 100,),
-        Icon(Icons.ac_unit, size: 40,),
-        Icon(Icons.ac_unit)
+        const Icon(Icons.ac_unit, size: 60,),
+        const Icon(Icons.ac_unit, size: 100,),
+        const Icon(Icons.ac_unit, size: 40,),
+        const Icon(Icons.ac_unit)
       ],
     );
   }
@@ -42,11 +42,11 @@ class SimpleWidgets extends StatelessWidget {
         color: Colors.green,
         width: 80,
         height: 80,
-        child: Text('String'),
+        child: const Text('String'),
       ),
       _simpleImage(),
-      Icon(Icons.info_outline, size: 30),
-      CupertinoButton(child: Text('Press me'), color: Colors.teal)
+          const Icon(Icons.info_outline, size: 30),
+      CupertinoButton(child: const Text('Press me'), color: Colors.teal)
     ]);
   }
 
@@ -92,7 +92,7 @@ class SimpleWidgets extends StatelessWidget {
               trailing: Icon(Icons.favorite_border));
         },
         separatorBuilder: (context, itemIndex) {
-          return Divider(color: Colors.deepPurple, height: 1);
+          return const Divider(color: Colors.deepPurple, height: 1);
         },
         itemCount: 5);
   }
@@ -102,7 +102,7 @@ class SimpleWidgets extends StatelessWidget {
 
     return ListView(children: [
       GridView.count(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: const EdgeInsets.all(20),
         crossAxisSpacing: 10,
@@ -115,7 +115,7 @@ class SimpleWidgets extends StatelessWidget {
                 )),
       ),
       GridView.count(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: const EdgeInsets.all(20),
         crossAxisSpacing: 10,
@@ -128,7 +128,7 @@ class SimpleWidgets extends StatelessWidget {
                 )),
       ),
       GridView.count(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: const EdgeInsets.all(20),
         crossAxisSpacing: 10,
@@ -174,8 +174,9 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  String buttonText = 'Press me';
   bool onInfoTapped = false;
+  final notifier = ValueNotifier<String>('Press me');
+
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +189,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             height: 300,
             child: Padding(
               padding: const EdgeInsets.all(30.0),
-              child: Text('String', style: TextStyle(color: Colors.white),),
+              child: Text('String', style: const TextStyle(color: Colors.white),),
             ),
           ),
           Image.network('https://placeimg.com/640/480/nature',
@@ -201,15 +202,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               },
               child:
                   Icon(onInfoTapped ? Icons.info_outline : Icons.info, size: 30)),
-          SizedBox(height: 200,),
-          FlatButton(
-              child: Text(buttonText, style: TextStyle(color: Colors.white)),
-              color: Colors.teal,
-              onPressed: () {
-                setState(() {
-                  buttonText = 'Was pressed';
-                });
-              }),
+          const SizedBox(height: 200,),
+          ValueListenableBuilder(
+            valueListenable: notifier,
+            builder: (_, value, __) => FlatButton(
+                child: Text(value, style: const TextStyle(color: Colors.white)),
+                color: Colors.teal,
+                onPressed: () {
+                  notifier.value = 'New Button Text';
+                }),
+          ),
         ],
       ),
     );

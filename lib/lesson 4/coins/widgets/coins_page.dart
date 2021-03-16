@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_flutter_note/lesson%204/coins/getting_coin_list_interactor.dart';
+import 'package:my_flutter_note/lesson%204/coins/models/coin.dart';
+import 'package:my_flutter_note/lesson%204/coins/widgets/coin_detail_page.dart';
+import 'package:my_flutter_note/lesson%204/coins/widgets/loading_page.dart';
 
-import '../getting_coin_list_interactor.dart';
-import '../models/coin.dart';
-import 'coin_detail_page.dart';
-import 'loading_page.dart';
+
 
 class CoinsPage extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _CoinsPageState extends State<CoinsPage> {
           } else if (snapshot.hasError) {
             print('Error');
           }
-          return LoadingPage();
+          return const LoadingPage();
         },
       ),
     );
@@ -34,7 +35,7 @@ class _CoinsPageState extends State<CoinsPage> {
       await GettingCoinListInteractor().execute();
 
   Widget _coinsWidget(List<Coin> coins) => ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return ColoredBox(
             color: index % 2 == 0
@@ -46,16 +47,16 @@ class _CoinsPageState extends State<CoinsPage> {
       shrinkWrap: true);
 
   Widget _singleCoin(Coin coin) => ListTile(
-        contentPadding: EdgeInsets.all(5.0),
+        contentPadding: const EdgeInsets.all(5.0),
         onTap: () => _onListItemTap(coin),
         leading: Text(
           coin.symbol,
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
         ),
         title: Text(
           coin.name,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16.0,
               color: Colors.blueGrey),
@@ -68,7 +69,7 @@ class _CoinsPageState extends State<CoinsPage> {
         CupertinoPageRoute(builder: (context) => CoinDetailPage(coin: coin)));
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Text(message),
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     ));
   }
 }

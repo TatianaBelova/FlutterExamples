@@ -89,7 +89,7 @@ class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
           date.minute < 10
               ? '0${date.minute.toString()}'
               : date.minute.toString(),
-          style: TextStyle(color: Colors.white, fontSize: 50),
+          style: const TextStyle(color: Colors.white, fontSize: 50),
         )),
       ),
     );
@@ -111,7 +111,7 @@ class _ClockWidget extends State<ClockWidget> with TickerProviderStateMixin {
           date.second < 10
               ? '0${date.second.toString()}'
               : date.second.toString(),
-          style: TextStyle(color: Colors.white, fontSize: 50),
+          style: const TextStyle(color: Colors.white, fontSize: 50),
         )),
       ),
     );

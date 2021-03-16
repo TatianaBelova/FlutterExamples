@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_note/lesson%204/coins/models/coin.dart';
 import 'package:my_flutter_note/lesson%204/coins/widgets/loading_page.dart';
 import 'package:my_flutter_note/lesson%205/bloc_pattern/coins_pattern_bloc.dart';
-
-import '../no_internet_page.dart';
-import '../repository.dart';
+import 'package:my_flutter_note/lesson%205/no_internet_page.dart';
+import 'package:my_flutter_note/lesson%205/repository.dart';
 
 class CoinsPatternPage extends StatefulWidget {
   @override
@@ -23,7 +22,7 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
           .push(CupertinoPageRoute(builder: (BuildContext context) => page));
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(message),
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
       ));
     });
   }
@@ -33,8 +32,8 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
     return ValueListenableBuilder(
       valueListenable: _bloc.startLoadingNotifier,
       builder: (_, value, __) => AnimatedSwitcher(
-        duration: Duration(milliseconds: 2000),
-        child: value ? _page() : _startLoad(),
+        duration: const Duration(milliseconds: 2000),
+        child: value ? Page(bloc: _bloc) : StartLoad(bloc: _bloc),
         transitionBuilder: (Widget child, Animation<double> animation) =>
             ScaleTransition(
           scale: animation,
@@ -45,77 +44,118 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
     );
   }
 
-  Widget _page() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder(
-          stream: _bloc.internetState,
-          initialData: InternetState.connected,
-          builder: (context, snapshot) {
-            InternetState state = snapshot.data;
-            switch (state) {
-              case InternetState.connected:
-                {
-                  _bloc.getCoins();
-                  return _coinsWidget();
-                }
-              case InternetState.notConnected:
-                {
-                  return NoInternetPage(
-                      haveInternetAction: () => _bloc.haveInternet.add(null));
-                }
-            }
-            return Container();
-          },
-        ),
-      );
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+}
 
-  Widget _startLoad() {
-    final tween = SizeTween(begin: Size.zero, end: Size(300, 300));
-    return Center(
-      child: GestureDetector(
-        onTap: _bloc.tapOnStartLoading,
-        child: TweenAnimationBuilder(
-          child: Center(
-              child: Text('Начать загрузку данных?',
-                  style: TextStyle(fontSize: 18))),
-          duration: Duration(seconds: 5),
-          curve: Curves.easeInCirc,
-          builder: (_, Size size, Widget child) => SizedBox.fromSize(
-            child: child,
-            size: size,
-          ),
-          tween: tween,
-        ),
+class Page extends StatelessWidget {
+  final bloc;
+
+  Page({this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: StreamBuilder(
+        stream: bloc.internetState,
+        initialData: InternetState.connected,
+        builder: (context, snapshot) {
+          InternetState state = snapshot.data;
+          switch (state) {
+            case InternetState.connected:
+              {
+                bloc.getCoins();
+                return CoinsWidget(bloc: bloc);
+              }
+            case InternetState.notConnected:
+              {
+                return NoInternetPage(
+                    haveInternetAction: () => bloc.haveInternet.add(null));
+              }
+          }
+          return Container();
+        },
       ),
     );
   }
+}
 
-  Widget _coinsWidget() => StreamBuilder(
-      stream: _bloc.streamCoins,
+class StartLoad extends StatelessWidget {
+  final bloc;
+  final tween = SizeTween(begin: Size.zero, end: Size(300, 300));
+
+  StartLoad({this.bloc});
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: GestureDetector(
+          onTap: bloc.tapOnStartLoading,
+          child: TweenAnimationBuilder(
+            child: const Center(
+                child: const Text('Начать загрузку данных?',
+                    style: const TextStyle(fontSize: 18))),
+            duration: const Duration(seconds: 5),
+            curve: Curves.easeInCirc,
+            builder: (_, Size size, Widget child) => SizedBox.fromSize(
+              child: child,
+              size: size,
+            ),
+            tween: tween,
+          ),
+        ),
+      );
+}
+
+class CoinsWidget extends StatefulWidget {
+  final bloc;
+
+  CoinsWidget({this.bloc});
+
+  @override
+  _CoinsWidgetState createState() => _CoinsWidgetState();
+}
+
+class _CoinsWidgetState extends State<CoinsWidget> {
+  @override
+  Widget build(BuildContext context) => StreamBuilder(
+      stream: widget.bloc.streamCoins,
       builder: (context, snapshot) => snapshot.hasData
           ? ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return ValueListenableBuilder(
-                  valueListenable: _bloc.colorNotifier,
-                  child: _singleCoin(snapshot.data[index]),
+                  valueListenable: widget.bloc.colorNotifier,
+                  child:
+                      SingleCoin(coin: snapshot.data[index], bloc: widget.bloc),
                   builder: (_, value, Widget child) => AnimatedContainer(
-                    duration: Duration(seconds: 2),
+                    duration: const Duration(seconds: 2),
                     color: index % 2 == 0 ? value : Colors.transparent,
                     child: child,
                   ),
                 );
               },
-              itemCount: 30,
-              shrinkWrap: true)
-          : LoadingPage());
+              shrinkWrap: true,
+              itemCount: 30)
+          : const LoadingPage());
+}
 
-  Widget _singleCoin(Coin coin) => ListTile(
-        contentPadding: EdgeInsets.all(5.0),
-        onTap: () => _bloc.tapOnItem.add(coin),
+class SingleCoin extends StatelessWidget {
+  final Coin coin;
+  final bloc;
+
+  SingleCoin({this.coin, this.bloc});
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        contentPadding: const EdgeInsets.all(5.0),
+        onTap: () => bloc.tapOnItem.add(coin),
         leading: Text(
           coin.symbol,
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
         ),
         title: Hero(
           tag: '${coin.name}',
@@ -124,7 +164,7 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
             child: Text(
               coin.name,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16.0,
                   color: Colors.blueGrey),
@@ -133,10 +173,4 @@ class _CoinsPatternPageState extends State<CoinsPatternPage> {
         ),
         subtitle: Text('id: ${coin.id}', textAlign: TextAlign.center),
       );
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
 }

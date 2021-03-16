@@ -3,9 +3,8 @@ import 'package:my_flutter_note/lesson%204/coins/models/coin.dart';
 import 'package:my_flutter_note/lesson%204/coins/models/coin_event.dart';
 import 'package:my_flutter_note/lesson%204/coins/widgets/loading_page.dart';
 import 'package:my_flutter_note/lesson%205/bloc_pattern/coin_pattern_detail_bloc.dart';
+import 'package:my_flutter_note/lesson%205/no_internet_page.dart';
 import 'package:my_flutter_note/lesson%205/repository.dart';
-
-import '../no_internet_page.dart';
 
 class CoinPatternDetailPage extends StatefulWidget {
   final Coin coin;
@@ -39,13 +38,13 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
               child: Material(
                   color: Colors.transparent,
                   child: Text(widget.coin.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold)))),
           leading: GestureDetector(
               onTap: () => _bloc.tapOnBackButton.add(null),
-              child: Icon(Icons.arrow_back, color: Colors.blueGrey)),
+              child: const Icon(Icons.arrow_back, color: Colors.blueGrey)),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -61,7 +60,7 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
                       case InternetState.connected:
                         {
                           _bloc.getEvents();
-                          return _listEvents();
+                          return ListEvents(bloc: _bloc);
                         }
                       case InternetState.notConnected:
                         {
@@ -73,39 +72,41 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
                     return Container();
                   },
                 )
-
-                // FutureBuilder(
-                //   future: _loadCoinEvents(),
-                //   builder: (context, snapshot) {
-                //     return snapshot.connectionState == ConnectionState.done &&
-                //             snapshot.data != null
-                //         ? snapshot.data.length == 0
-                //             ? Text('Событий не найдено')
-                //             : _listEvents(snapshot.data)
-                //         : LoadingPage();
-                //   },
-                // )
               ],
             ),
           ),
         ));
   }
+}
 
-  Widget _listEvents() => StreamBuilder(
-      stream: _bloc.streamEvents,
+class ListEvents extends StatelessWidget {
+  final bloc;
+
+  ListEvents({this.bloc});
+
+  @override
+  Widget build(BuildContext context) => StreamBuilder(
+      stream: bloc.streamEvents,
       builder: (context, snapshot) => snapshot.hasData
           ? snapshot.data.length == 0
               ? Text('Событий не найдено')
               : ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) =>
-                      _eventWidget(snapshot.data[index]),
+                      EventWidget(event: snapshot.data[index]),
                 )
-          : LoadingPage());
+          : const LoadingPage());
+}
 
-  Widget _eventWidget(CoinEventModel event) => Builder(
+class EventWidget extends StatelessWidget {
+  final CoinEventModel event;
+
+  EventWidget({this.event});
+
+  @override
+  Widget build(BuildContext context) => Builder(
         builder: (context) => Container(
           height: 200,
           padding: const EdgeInsets.all(16.0),
@@ -126,24 +127,31 @@ class _CoinPatternDetailPageState extends State<CoinPatternDetailPage> {
                         loadingBuilder: (BuildContext context, Widget child,
                             ImageChunkEvent loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return LoadingPage();
+                          return const LoadingPage();
                         },
                       ),
                     ],
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: _eventDescription(event.description),
+                    child: EventDescription(description: event.description),
                   ),
           ),
         ),
       );
+}
 
-  Widget _eventDescription(String description) => Center(
+class EventDescription extends StatelessWidget {
+  final String description;
+
+  EventDescription({this.description});
+
+  @override
+  Widget build(BuildContext context) => Center(
         child: Text(
             description.isNotEmpty
                 ? description
                 : 'Описание события отсуствует',
-            style: TextStyle(color: Colors.grey, fontSize: 16)),
+            style: const TextStyle(color: Colors.grey, fontSize: 16)),
       );
 }

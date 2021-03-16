@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_note/lesson%204/coins/getting_coin_events_interactor.dart';
 import 'package:my_flutter_note/lesson%204/coins/models/coin.dart';
 import 'package:my_flutter_note/lesson%204/coins/models/coin_event.dart';
+import 'package:my_flutter_note/lesson%204/coins/widgets/loading_page.dart';
 
-import '../getting_coin_events_interactor.dart';
-import 'loading_page.dart';
 
 class CoinDetailPage extends StatelessWidget {
   final Coin coin;
@@ -33,7 +33,7 @@ class CoinDetailPage extends StatelessWidget {
                         ? snapshot.data.length == 0
                             ? Text('Событий не найдено')
                             : _listEvents(snapshot.data)
-                        : LoadingPage();
+                        : const LoadingPage();
                   },
                 )
               ],
@@ -46,7 +46,7 @@ class CoinDetailPage extends StatelessWidget {
       await GettingCoinEventsInteractor().execute(coinId: coin.id);
 
   Widget _listEvents(List<CoinEventModel> events) => ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: events.length,
         itemBuilder: (context, index) => _eventWidget(events[index]),
@@ -73,7 +73,7 @@ class CoinDetailPage extends StatelessWidget {
                         loadingBuilder: (BuildContext context, Widget child,
                             ImageChunkEvent loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return LoadingPage();
+                          return const LoadingPage();
                         },
                       ),
                     ],
@@ -91,6 +91,6 @@ class CoinDetailPage extends StatelessWidget {
             description.isNotEmpty
                 ? description
                 : 'Описание события отсуствует',
-            style: TextStyle(color: Colors.grey, fontSize: 16)),
+            style: const TextStyle(color: Colors.grey, fontSize: 16)),
       );
 }

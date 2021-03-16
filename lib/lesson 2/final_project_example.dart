@@ -17,7 +17,7 @@ class FinalProjectExampleList extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.check),
+                    const Icon(Icons.check),
                     Column(
                       children: [
                         Text('Объект списка ${index + 1}'),
@@ -47,7 +47,7 @@ class FinalProjectExampleDetail extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
             },
-            child: Icon(Icons.arrow_back)),
+            child: const Icon(Icons.arrow_back)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:my_flutter_note/lesson%204/coins/models/coin_event.dart';
+import 'package:my_flutter_note/lesson%205/no_internet_page.dart';
 import 'package:my_flutter_note/lesson%205/repository.dart';
-
-import '../no_internet_page.dart';
 
 class CoinPatternDetailBloc {
   List<CoinEventModel> _listEvents;

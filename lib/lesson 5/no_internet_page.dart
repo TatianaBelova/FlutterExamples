@@ -1,17 +1,15 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_flutter_note/lesson%206/flutter_logo_animated.dart';
 import 'package:my_flutter_note/lesson%206/switcher.dart';
-
-import '../lesson 6/update_icon_animated.dart';
+import 'package:my_flutter_note/lesson%206/update_icon_animated.dart';
 
 enum InternetState { connected, notConnected }
 
 class NoInternetPage extends StatefulWidget {
   final void Function() haveInternetAction;
 
-  NoInternetPage({@required this.haveInternetAction});
+  const NoInternetPage({@required this.haveInternetAction});
 
   @override
   State<StatefulWidget> createState() => NoInternetPageState();
@@ -26,8 +24,8 @@ class NoInternetPageState extends State<NoInternetPage> {
     _bloc = NoInternetPageBloc(hasInternet: widget.haveInternetAction);
   }
 
-  final TextStyle regularTextStyle =
-      TextStyle(fontSize: 15, color: Color.fromARGB(255, 60, 60, 60));
+  TextStyle regularTextStyle =
+      const TextStyle(fontSize: 15, color: Color.fromARGB(255, 60, 60, 60));
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +36,13 @@ class NoInternetPageState extends State<NoInternetPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _textNoInternet(),
-            _rowUpdate(),
-            SizedBox(height: 100),
+            TextNoInternet(textStyle: regularTextStyle),
+            RowUpdate(),
+            const SizedBox(height: 100),
             Row(
               children: [
                 Text('Включить Bluetooth '),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 ValueListenableBuilder(
                   valueListenable: _bloc.switchBluetoothNotifier,
                   builder: (_, value, __) => Switcher(
@@ -59,7 +57,7 @@ class NoInternetPageState extends State<NoInternetPage> {
             Row(
               children: [
                 Text('Включить Wifi'),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 ValueListenableBuilder(
                   valueListenable: _bloc.switchWifiNotifier,
                   builder: (_, value, __) => Switcher(
@@ -77,39 +75,56 @@ class NoInternetPageState extends State<NoInternetPage> {
       ),
     );
   }
+}
 
-  Widget _textNoInternet() {
-    return Center(
-      child: Text("Подключение к интернету отсутствует",
-          textAlign: TextAlign.center, style: regularTextStyle),
-    );
-  }
+class TextNoInternet extends StatelessWidget {
+  final textStyle;
 
-  Widget _rowUpdate() {
-    return RaisedButton(
-      onPressed: _bloc.onUpdateTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _rowUpdateIcon(),
-          Text("Обновить страницу", style: regularTextStyle),
-        ],
-      ),
-    );
-  }
+  TextNoInternet({this.textStyle});
 
-  Padding _rowUpdateIcon() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 9.0),
-      child: ValueListenableBuilder(
-          valueListenable: _bloc.updateIconNotifier,
-          builder: (_, value, __) {
-            return value
-                ? UpdateIconAnimated(onFinishAnimation: _bloc.onFinishAnimation)
-                : Icon(Icons.refresh, color: Colors.green.shade600);
-          }),
-    );
-  }
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Text("Подключение к интернету отсутствует",
+            textAlign: TextAlign.center, style: textStyle),
+      );
+}
+
+class RowUpdate extends StatelessWidget {
+  final bloc;
+  final textStyle;
+
+  RowUpdate({this.bloc, this.textStyle});
+
+  @override
+  Widget build(BuildContext context) => RaisedButton(
+        onPressed: bloc.onUpdateTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RowUpdateIcon(bloc: bloc),
+            Text("Обновить страницу", style: textStyle),
+          ],
+        ),
+      );
+}
+
+class RowUpdateIcon extends StatelessWidget {
+  final bloc;
+
+  RowUpdateIcon({this.bloc});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(right: 9.0),
+        child: ValueListenableBuilder(
+            valueListenable: bloc.updateIconNotifier,
+            builder: (_, value, __) {
+              return value
+                  ? UpdateIconAnimated(
+                      onFinishAnimation: bloc.onFinishAnimation)
+                  : Icon(Icons.refresh, color: Colors.green.shade600);
+            }),
+      );
 }
 
 class NoInternetPageBloc {
@@ -125,7 +140,7 @@ class NoInternetPageBloc {
   Future<void> _checkConnection() async {
     var state = await Connectivity().checkConnectivity();
     while (state == ConnectivityResult.none) {
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       state = await Connectivity().checkConnectivity();
     }
     hasInternet();
@@ -144,7 +159,8 @@ class NoInternetPageBloc {
 
   Future<String> switchBluetooth() async {
     try {
-      final String result = await platform.invokeMethod(!switchBluetoothNotifier.value ? 'onBluetooth' : 'offBluetooth');
+      final String result = await platform.invokeMethod(
+          !switchBluetoothNotifier.value ? 'onBluetooth' : 'offBluetooth');
       switchBluetoothNotifier.value = !switchBluetoothNotifier.value;
       print(result);
       return result;

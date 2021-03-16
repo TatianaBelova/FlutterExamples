@@ -7,9 +7,9 @@ import 'package:my_flutter_note/lesson%204/coins/widgets/loading_page.dart';
 import 'package:my_flutter_note/lesson%205/bloc_library/bloc/coin_bloc.dart';
 import 'package:my_flutter_note/lesson%205/bloc_library/bloc/coin_event.dart';
 import 'package:my_flutter_note/lesson%205/bloc_library/bloc/coin_state.dart';
+import 'package:my_flutter_note/lesson%205/bloc_library/presentation/coin_bloc_library_detail_page.dart';
 import 'package:my_flutter_note/lesson%205/no_internet_page.dart';
 
-import 'coin_bloc_library_detail_page.dart';
 
 class CoinsBlocLibraryPage extends StatefulWidget {
   @override
@@ -31,7 +31,7 @@ class _CoinsBlocLibraryPageState extends State<CoinsBlocLibraryPage> {
       child: BlocBuilder<CoinBloc, CoinState>(
         builder: (context, CoinState state) {
           if (state is ListLoadingState) {
-            return LoadingPage();
+            return const LoadingPage();
           }
           if (state is ListLoadedState) {
             return _coinsWidget(state.listCoins);
@@ -42,7 +42,7 @@ class _CoinsBlocLibraryPageState extends State<CoinsBlocLibraryPage> {
           if (state is ShowingSnackBarState) {
             Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(state.message),
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                 ));
           }
           if (state is GoingToNextPageState) {
@@ -59,7 +59,7 @@ class _CoinsBlocLibraryPageState extends State<CoinsBlocLibraryPage> {
       await GettingCoinListInteractor().execute();
 
   Widget _coinsWidget(List<Coin> coins) => ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return ColoredBox(
             color: index % 2 == 0
@@ -71,16 +71,16 @@ class _CoinsBlocLibraryPageState extends State<CoinsBlocLibraryPage> {
       shrinkWrap: true);
 
   Widget _singleCoin(Coin coin) => ListTile(
-        contentPadding: EdgeInsets.all(5.0),
+        contentPadding: const EdgeInsets.all(5.0),
         onTap: () => _onListItemTap(coin),
         leading: Text(
           coin.symbol,
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
         ),
         title: Text(
           coin.name,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16.0,
               color: Colors.blueGrey),

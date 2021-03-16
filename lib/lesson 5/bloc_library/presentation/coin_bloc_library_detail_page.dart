@@ -31,7 +31,7 @@ class CoinBlockLibraryDetailPage extends StatelessWidget {
                         ? snapshot.data.length == 0
                             ? Text('Событий не найдено')
                             : _listEvents(snapshot.data)
-                        : LoadingPage();
+                        : const LoadingPage();
                   },
                 )
               ],
@@ -44,7 +44,7 @@ class CoinBlockLibraryDetailPage extends StatelessWidget {
       await GettingCoinEventsInteractor().execute(coinId: coin.id);
 
   Widget _listEvents(List<CoinEventModel> events) => ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: events.length,
         itemBuilder: (context, index) => _eventWidget(events[index]),
@@ -71,7 +71,7 @@ class CoinBlockLibraryDetailPage extends StatelessWidget {
                         loadingBuilder: (BuildContext context, Widget child,
                             ImageChunkEvent loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return LoadingPage();
+                          return const LoadingPage();
                         },
                       ),
                     ],
@@ -89,6 +89,6 @@ class CoinBlockLibraryDetailPage extends StatelessWidget {
             description.isNotEmpty
                 ? description
                 : 'Описание события отсуствует',
-            style: TextStyle(color: Colors.grey, fontSize: 16)),
+            style: const TextStyle(color: Colors.grey, fontSize: 16)),
       );
 }

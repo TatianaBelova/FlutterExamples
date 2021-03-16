@@ -13,7 +13,7 @@ class UpdateIconAnimated extends StatefulWidget {
 
 class UpdateIconAnimatedState extends State<UpdateIconAnimated> with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  final duration = Duration(milliseconds: 23000);
+  final duration = const Duration(milliseconds: 23000);
 
   @override
   void initState() {
@@ -25,20 +25,19 @@ class UpdateIconAnimatedState extends State<UpdateIconAnimated> with SingleTicke
   Widget build(BuildContext context) {
     return RotationTransition(
       turns: refreshAnimation(),
-      child: refreshIcon(),
+      child: refreshIcon,
     );
   }
 
   Animation<double> refreshAnimation() {
     return Tween(begin: 0.0, end: pi * 7).animate(_controller)
       ..addStatusListener((state) {
-          if (state == AnimationStatus.completed)
-            widget.onFinishAnimation();
-          }
-        );
+        if (state == AnimationStatus.completed)
+          widget.onFinishAnimation?.call();
+      });
   }
 
-  Icon refreshIcon() => Icon(
+  StatelessWidget refreshIcon = Icon(
       Icons.refresh,
       color: Colors.green.shade600
   );

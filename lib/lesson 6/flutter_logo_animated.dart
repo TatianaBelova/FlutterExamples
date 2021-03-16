@@ -40,7 +40,7 @@ class _FlutterLogoAnimatedState extends State<FlutterLogoAnimated>
         color: Colors.black12,
         height: 100,
         width: 100,
-        child: FlutterLogo(
+        child: const FlutterLogo(
           size: 30,
         ),
       ),

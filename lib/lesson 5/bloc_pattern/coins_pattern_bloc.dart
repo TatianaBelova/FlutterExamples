@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_note/lesson%204/coins/models/coin.dart';
+import 'package:my_flutter_note/lesson%205/bloc_pattern/coin_pattern_detail_page.dart';
+import 'package:my_flutter_note/lesson%205/no_internet_page.dart';
 import 'package:my_flutter_note/lesson%205/repository.dart';
-
-import '../no_internet_page.dart';
-import 'coin_pattern_detail_page.dart';
 
 class CoinsPatternBloc {
   List<Coin> _listItems;
@@ -37,7 +36,7 @@ class CoinsPatternBloc {
     _listItems = await _repository.loadListCoins();
     if (_listItems != null) {
       _outGetCoins.sink.add(_listItems);
-      return Future.delayed(Duration(milliseconds: 500))
+      return Future.delayed(const Duration(milliseconds: 500))
           .then((_) => colorNotifier.value = Color.fromARGB(255, 175, 246, 250));
     } else {
       return _changeInternetAction(InternetState.notConnected);
